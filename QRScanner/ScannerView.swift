@@ -16,15 +16,11 @@ struct ScannerView: View {
             VStack {
                 VStack {
                     Text("QR Scanner")
-                        .font(.subheadline)
                     QrCodeScannerView()
                         .found(r: self.viewModel.onFoundQrCode)
                         .torchLight(isOn: self.viewModel.torchIsOn)
                         // .interval(delay: self.viewModel.scanInterval)
                 }
-                .padding(.vertical, 20)
-                
-                Spacer()
                 HStack {
                     Button(action: {
                         self.viewModel.torchIsOn.toggle()
@@ -32,7 +28,7 @@ struct ScannerView: View {
                         Image(systemName: self.viewModel.torchIsOn ? "bolt.fill" : "bolt.slash.fill")
                             .imageScale(.large)
                             .foregroundColor(self.viewModel.torchIsOn ? Color.yellow : Color.blue)
-                            .padding()
+                            .padding(.init(top: 10, leading: 15, bottom: 10, trailing: 15))
                     })
                 }
                 .background(Color.white)
