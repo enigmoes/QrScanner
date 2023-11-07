@@ -11,13 +11,17 @@ import AVFoundation
 
 struct QrCodeScannerView: UIViewRepresentable {
     
-    private let supportedBarcodeTypes: [AVMetadataObject.ObjectType] = [.qr]
+    let supportedBarcodeTypes: [AVMetadataObject.ObjectType] = [.qr]
     typealias UIViewType = CameraPreview
     
-    private let session = AVCaptureSession()
+    @State var session = AVCaptureSession()
     private let delegate = QrCodeCameraDelegate()
     private let metadataOutput = AVCaptureMetadataOutput()
     
+    func setSession(getSession: AVCaptureSession) -> QrCodeScannerView {
+        session = getSession
+        return self
+    }
     
     func torchLight(isOn: Bool) -> QrCodeScannerView {
         if let backCamera = AVCaptureDevice.default(for: AVMediaType.video) {

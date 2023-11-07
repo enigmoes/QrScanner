@@ -11,36 +11,56 @@ import UniformTypeIdentifiers
 struct ScannerView: View {
     @ObservedObject var viewModel = ScannerViewModel()
     
+    var qrCodeScannerView = QrCodeScannerView()
+
+    let previewCornerRadius: CGFloat = 15.0
+    
     var body: some View {
-        ZStack {
-            VStack {
+        GeometryReader { geometryReader in
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                
                 VStack {
-                    Text("QR Scanner")
-                    QrCodeScannerView()
-                        .found(r: self.viewModel.onFoundQrCode)
-                        .torchLight(isOn: self.viewModel.torchIsOn)
-                        // .interval(delay: self.viewModel.scanInterval)
+                    VStack {
+                        Text("QR Scanner")
+                            .foregroundColor(.white)
+                        qrCodeScannerView
+                            .setSession(getSession: self.viewModel.session)
+                            .found(r: self.viewModel.onFoundQrCode)
+                            .torchLight(isOn: self.viewModel.torchIsOn)
+                            // .interval(delay: self.viewModel.scanInterval)
+                            .clipShape(RoundedRectangle(cornerRadius: previewCornerRadius))
+                            .onAppear { self.viewModel.startSession() }
+                            .onDisappear { self.viewModel.pauseSession() }
+                            .overlay(
+                                Image("ObjectReticle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .padding(.all))
+                    }
+                    HStack {
+                        Button(action: {
+                            self.viewModel.torchIsOn.toggle()
+                        }, label: {
+                            Image(systemName: self.viewModel.torchIsOn ? "bolt.fill" : "bolt.slash.fill")
+                                .imageScale(.large)
+                                .foregroundColor(self.viewModel.torchIsOn ? Color.yellow : Color.blue)
+                                .padding(.init(top: 10, leading: 15, bottom: 10, trailing: 15))
+                        })
+                    }
+                    .background(Color.white)
+                    .cornerRadius(10)
                 }
-                HStack {
-                    Button(action: {
-                        self.viewModel.torchIsOn.toggle()
-                    }, label: {
-                        Image(systemName: self.viewModel.torchIsOn ? "bolt.fill" : "bolt.slash.fill")
-                            .imageScale(.large)
-                            .foregroundColor(self.viewModel.torchIsOn ? Color.yellow : Color.blue)
-                            .padding(.init(top: 10, leading: 15, bottom: 10, trailing: 15))
-                    })
-                }
-                .background(Color.white)
-                .cornerRadius(10)
             }
+            .sheet(isPresented: $viewModel.showingSheet, onDismiss: {
+                self.viewModel.lastQrCode = ""
+                self.viewModel.showingSheet = false
+                
+                self.viewModel.startSession()
+            }, content: {
+                SheetView(QrCode: $viewModel.lastQrCode)
+            })
         }
-        .sheet(isPresented: $viewModel.showingSheet, onDismiss: {
-            self.viewModel.lastQrCode = ""
-            self.viewModel.showingSheet = false
-        }, content: {
-            SheetView(QrCode: $viewModel.lastQrCode)
-        })
     }
 }
 
