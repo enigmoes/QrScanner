@@ -27,6 +27,8 @@ class ScannerViewModel: ObservableObject {
     func onFoundQrCode(_ code: String) {
         self.lastQrCode = code
         self.showingSheet = true
+        
+        self.pauseSession()
     }
     
     init() {
