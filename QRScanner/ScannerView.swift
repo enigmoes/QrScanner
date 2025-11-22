@@ -10,10 +10,15 @@ import UniformTypeIdentifiers
 
 struct ScannerView: View {
     @ObservedObject var viewModel = ScannerViewModel()
+    var onScanComplete: ((String) -> Void)?
     
     var qrCodeScannerView = QrCodeScannerView()
 
     let previewCornerRadius: CGFloat = 15.0
+    
+    init(onScanComplete: ((String) -> Void)? = nil) {
+        self.onScanComplete = onScanComplete
+    }
     
     var body: some View {
         GeometryReader { geometryReader in
@@ -53,6 +58,9 @@ struct ScannerView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showingSheet, onDismiss: {
+                if let callback = onScanComplete {
+                    callback(self.viewModel.lastQrCode)
+                }
                 self.viewModel.lastQrCode = ""
                 self.viewModel.showingSheet = false
                 

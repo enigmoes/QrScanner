@@ -25,9 +25,10 @@ class ScannerViewModel: ObservableObject {
     @Published var session: AVCaptureSession
     
     func onFoundQrCode(_ code: String) {
-        self.lastQrCode = code
-        self.showingSheet = true
-        
+        DispatchQueue.main.async {
+            self.lastQrCode = code
+            self.showingSheet = true
+        }
         self.pauseSession()
     }
     

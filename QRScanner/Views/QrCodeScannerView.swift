@@ -57,7 +57,7 @@ struct QrCodeScannerView: UIViewRepresentable {
     func setupCamera(_ uiView: CameraPreview) {
         if let backCamera = AVCaptureDevice.default(for: AVMediaType.video) {
             if let input = try? AVCaptureDeviceInput(device: backCamera) {
-                session.sessionPreset = .photo
+                session.sessionPreset = .high
                 
                 if session.canAddInput(input) {
                     session.addInput(input)

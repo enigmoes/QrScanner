@@ -11,13 +11,13 @@ import SwiftUI
 struct QRScannerApp: App {
     var body: some Scene {
         WindowGroup {
-            ScannerView()
+            HistoryView()
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ScannerView()
+        HistoryView()
     }
 }
