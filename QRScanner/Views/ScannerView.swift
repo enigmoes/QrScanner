@@ -56,7 +56,7 @@ struct ScannerView: View {
                     Button {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
+                        Image(systemName: "xmark")
                             .font(.system(size: 18))
                             .foregroundColor(.gray)
                     }
